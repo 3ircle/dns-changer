@@ -67,8 +67,9 @@ def clear_dns():
         print("something went wrong")
 
 def add_dns(dns_name,prime,sec=None):
-    with open('./dns-list.json','w') as file:
-        js = json.load(file)
+    with open('./dns-list.json','r') as file:
+        js = list(json.load(file))
+        print(js)
         for i in js:
             if list(i.keys())[0]==dns_name:
                 print('dns alredy exist')
@@ -83,7 +84,8 @@ def add_dns(dns_name,prime,sec=None):
 
         d = {dns_name:[prime,sec]}
         js.append(d)
-
+        
+    with open('./dns-list.json','w') as file:
         file.write(json.dumps(js))
 
 def get_dns(dns_name):
