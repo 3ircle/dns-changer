@@ -10,7 +10,7 @@ def is_valid_dns(dns:str):
         dns_list = dns.split('.')
         if len(dns_list) == 4:
             for i in dns_list:
-                if not i.isdigit:
+                if not i.isdigit():
                     return False
             return True
     except:
@@ -19,7 +19,6 @@ def is_valid_dns(dns:str):
 def get_active_adapter():
     addrs = psutil.net_if_addrs()
     stats = psutil.net_if_stats()
-    gws = psutil.net_if_stats()
 
     for iface, s in stats.items():
         if not s.isup:
@@ -28,7 +27,7 @@ def get_active_adapter():
         for addr in iface_addrs:
             if addr.family == socket.AF_INET:
                 ip = addr.address
-                if ip.startswith("169.254") or ip.startswith("127."):
+                if ip.startswith("127.") or ip.startswith("169.254"):
                     continue
                 return iface
     return None
