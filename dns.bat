@@ -1,2 +1,2 @@
 @echo off
-python "./dns-changer.py" %*
+python "%~dp0dns-changer.py" %*

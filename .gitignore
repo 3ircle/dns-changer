@@ -4,3 +4,8 @@
 # Logs
 log.txt
 
+# Python
+__pycache__/
+*.pyc
+
+
