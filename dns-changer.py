@@ -1,9 +1,19 @@
-
 import sys
 import subprocess
 import psutil
 import socket
 import json
+import ctypes
+
+
+
+
+
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
 
 def is_valid_dns(dns:str):
     try:
@@ -101,46 +111,51 @@ def get_dns_list():
         js = json.load(file)
         return js
 
+def main():
+    if not get_active_adapter():
+        print("no active network adapter found")
+        sys.exit()
 
+    argumants = sys.argv
 
-if not get_active_adapter():
-    print("no active network adapter found")
-    sys.exit()
-
-
-
-
-argumants = sys.argv
-
-if argumants:
-    if '-set' in argumants:
-        if len(argumants) >= 4:
-            set_dns(argumants[2], argumants[3])
-        elif len(argumants) == 3:
-            if argumants[2][0].isdigit():
-                set_dns(argumants[2])
+    if argumants:
+        if '-set' in argumants:
+            if len(argumants) >= 4:
+                set_dns(argumants[2], argumants[3])
+            elif len(argumants) == 3:
+                if argumants[2][0].isdigit():
+                    set_dns(argumants[2])
+                else:
+                    dns_conf = get_dns(argumants[2])
+                    if len(dns_conf) == 2:
+                        set_dns(dns_conf[0], dns_conf[1])
+                    elif len(dns_conf) == 1:
+                        set_dns(dns_conf[0])
             else:
-                dns_conf = get_dns(argumants[2])
-                if len(dns_conf) == 2:
-                    set_dns(dns_conf[0], dns_conf[1])
-                elif len(dns_conf) == 1:
-                    set_dns(dns_conf[0])
-        else:
-            print('not enough argumants')
+                print('not enough argumants')
 
-    elif '-clear' in argumants:
-        clear_dns()
-    
-    elif '-add' in argumants:
-        if len(argumants) ==4 :
-            add_dns(argumants[2],argumants[3])
-        elif len(argumants) == 5:
-            add_dns(argumants[2],argumants[3],argumants[4])
-        else:
-            print('invalid input')
-            sys.exit()
-    
-    elif '-list' in argumants:
-        dns_list = get_dns_list()
-        for i in dns_list:
-            print(f'[{list(i.keys())[0]}]' + f'[{i[list(i.keys())[0]][0]}][{i[list(i.keys())[0]][1]}]')
+        elif '-clear' in argumants:
+            clear_dns()
+        
+        elif '-add' in argumants:
+            if len(argumants) ==4 :
+                add_dns(argumants[2],argumants[3])
+            elif len(argumants) == 5:
+                add_dns(argumants[2],argumants[3],argumants[4])
+            else:
+                print('invalid input')
+                sys.exit()
+        
+        elif '-list' in argumants:
+            dns_list = get_dns_list()
+            for i in dns_list:
+                print(f'[{list(i.keys())[0]}]' + f'[{i[list(i.keys())[0]][0]}][{i[list(i.keys())[0]][1]}]')
+
+
+if is_admin():
+    main()
+else:
+    ctypes.windll.shell32.ShellExecuteW(
+        None, "runas", sys.executable, " ".join(sys.argv), None, 1
+    )
+

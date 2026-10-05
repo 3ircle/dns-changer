@@ -1,0 +1,6 @@
+# Circle Harness isolated worktree workspace
+.circle/
+
+# Logs
+log.txt
+

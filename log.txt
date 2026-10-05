@@ -1,6 +1,0 @@
-['.\\dns-changer.py']
-========
-['.\\dns-changer.py', '-imposter']
-========
-['.\\dns-changer.py', '-imposter']
-========
